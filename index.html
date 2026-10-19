@@ -56,7 +56,8 @@
   details.try summary::-webkit-details-marker { display:none; }
   details.try summary::after { content: "+"; font-size: 26px; line-height: 1; }
   details.try[open] summary::after { content: "–"; }
-  details.try summary:hover { background: var(--b); }
+  details.try summary:hover { background: #262626; }
+  details.try summary.c-r { color: #F04A4A; } details.try summary.c-y { color: var(--y); } details.try summary.c-b { color: #6E9BE6; }
   .try-body { border: var(--line) solid var(--k); border-top: 0; padding: 4px 18px 8px; }
   header .title { min-width: 0; }
   @media (max-width: 640px) {
@@ -82,7 +83,7 @@
 <main>
 
 <details class="try fold" open>
-  <summary>See it: examples</summary>
+  <summary class="c-r">See it: examples</summary>
   <div class="try-body">
 <div class="examples">
   <div class="ex">
@@ -127,7 +128,7 @@
 </details>
 
 <details class="try fold">
-  <summary>Test it: write and read Mondrian Code</summary>
+  <summary class="c-y">Test it: write and read Mondrian Code</summary>
   <div class="try-body">
 <h3>Write: text → painting</h3>
 <div class="tool">
@@ -164,7 +165,7 @@
 </details>
 
 <details class="try fold" open>
-  <summary>How it works</summary>
+  <summary class="c-b">How it works</summary>
   <div class="try-body">
 <h2 class="b">The rules</h2>
 <p><b>1. Three colours are the digits.</b> <span class="sw R"></span> = 0, <span class="sw Y"></span> = 1, <span class="sw B"></span> = 2. One cell holds one <i>trit</i>, a ternary digit, the three-state cousin of the bit. A trit carries log₂3 ≈ 1.58 bits, and base 3 is the closest whole number to e ≈ 2.718, the theoretically most economical base.</p>
