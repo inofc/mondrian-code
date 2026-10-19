@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mondrian Code: write any text in red, yellow and blue</title>
-<meta name="description" content="A ternary writing system in Mondrian's five colours. Encode English or Russian text into a square colour grid and decode it back.">
+<meta name="description" content="A ternary writing system in Mondrian's five colours. Encode Latin or Cyrillic text into a square colour grid and decode it back.">
 <style>
   :root { --r:#DD2222; --y:#FAC901; --b:#225095; --k:#141414; --w:#ffffff; --line:6px; }
   * { box-sizing: border-box; }
@@ -109,7 +109,7 @@
   <div class="try-body">
 <h3>Write: text → painting</h3>
 <div class="tool">
-  <label for="enc-in"><b>Your text</b> <span class="muted">(English or Russian; letters, digits and . , ? ! - : ; " ( ))</span></label>
+  <label for="enc-in"><b>Your text</b> <span class="muted">(any Latin or Cyrillic script: English, German, French, Swiss German, Russian, Ukrainian…; letters, digits and . , ? ! - : ; " ( ))</span></label>
   <textarea id="enc-in">Hello world</textarea>
   <div class="row">
     <div><label class="muted" for="enc-cell">Cell size</label>
@@ -128,7 +128,7 @@
 <div class="tool">
   <div class="row">
     <div><label for="dec-lang"><b>Language of the painting</b></label>
-      <select id="dec-lang"><option value="EN">English</option><option value="RU">Russian</option></select></div>
+      <select id="dec-lang"><option value="EN">Latin</option><option value="RU">Cyrillic</option></select></div>
     <div><label for="dec-file"><b>Upload a painting</b> <span class="muted">(PNG made on this page)</span></label>
       <input type="file" id="dec-file" accept="image/*"></div>
   </div>
@@ -177,9 +177,9 @@
 <p><b>What the numbers say.</b> Mondrian Code needs the <b>fewest squares</b> of any code here that a person can read by eye: 2.89 per letter, against 4.20 bits for the best binary Huffman code (31% fewer) and 8 for ASCII (64% fewer). That is the advantage of three colours over two. But each square can show 5 states, and the white and black markers use part of that capacity, so in pure information terms it is about <b>62% efficient</b>, where Huffman codes reach 97–99%. The markers are what you pay for being able to see where every letter ends and to recover after a misread cell. In real text the gap narrows: about one character in six is a space, which binary codes must store and Mondrian Code gets free inside the black marker.</p>
 
 <h2 class="k">The alphabet</h2>
-<p class="muted">The same colours mean different letters in English and Russian, so the reader needs to know the language. Digits and punctuation are shared.</p>
+<p class="muted">Two scripts: <b>Latin</b> (letter order by English frequency, plus the special letters of German, Swiss German, French, Spanish, Portuguese and the Nordic languages) and <b>Cyrillic</b> (order by Russian frequency, plus Ukrainian, Belarusian, Serbian and Macedonian letters). The same colours mean different letters in the two scripts, so the reader needs to know which one. Digits and punctuation are shared.</p>
 <table>
-  <tr><th style="width:110px">Cells</th><th>English</th><th>Russian</th></tr>
+  <tr><th style="width:110px">Cells</th><th>Latin</th><th>Cyrillic</th></tr>
   <tr><td>1</td><td class="codes" id="t-en-1"></td><td class="codes" id="t-ru-1"></td></tr>
   <tr><td>2</td><td class="codes" id="t-en-2"></td><td class="codes" id="t-ru-2"></td></tr>
   <tr><td>3</td><td class="codes" id="t-en-3"></td><td class="codes" id="t-ru-3"></td></tr>
@@ -204,26 +204,28 @@ const tier = n => { let out=['']; for (let i=0;i<n;i++) out = out.flatMap(p => [
 const EN_FREQ = 'ETAOINSHRDLCUMWFGYPBVKJXQZ';
 const RU_FREQ = 'ОЕАИНТСРВЛКМДПУЯЫЬГЗБЧЙХЖШЮЦЩЭФЪЁ';
 const DIG = '0123456789', PUN = '.,?!-:;"()';
-function table(freq) {
+function table(freq, extra) {
   const t = {}, [t1,t2,t3,t4] = [1,2,3,4].map(tier);
   [...freq.slice(0,3)].forEach((c,i) => t[c]=t1[i]);
   [...freq.slice(3,12)].forEach((c,i) => t[c]=t2[i]);
   const rest = freq.slice(12);
   [...rest.slice(0,17)].forEach((c,i) => t[c]=t3[i]);          // tier 3: up to 17 letters...
   [...DIG].forEach((c,i) => t[c]=t3[17+i]);                    // ...then the 10 digits, same in both languages
-  [...PUN + rest.slice(17)].forEach((c,i) => t[c]=t4[i]);      // tier 4: punctuation first, then rare letters
+  [...PUN + rest.slice(17) + extra].forEach((c,i) => t[c]=t4[i]);  // tier 4: punctuation first, then rare and accented letters
   return t;
 }
-const T = { EN: table(EN_FREQ), RU: table(RU_FREQ) };
+const EN_EXTRA = 'ÄÖÜßÉÈÊËÀÂÁÇÎÏÍÔÓÛÙÚÑÃÕÅÆØŒ';   // German / Swiss German, French, Spanish, Portuguese, Nordic
+const RU_EXTRA = 'ЄІЇҐЎЂЈЉЊЋЏЃЌЅ';               // Ukrainian, Belarusian, Serbian, Macedonian
+const T = { EN: table(EN_FREQ, EN_EXTRA), RU: table(RU_FREQ, RU_EXTRA) };
 const COL = { '0':'#DD2222', '1':'#FAC901', '2':'#225095', 'W':'#FFFFFF', 'K':'#141414' };
 const NAME = { '0':'R', '1':'Y', '2':'B', 'W':'W', 'K':'K' };
 const FROM = { R:'0', Y:'1', B:'2', W:'W', K:'K' };
 
 // ---- encoder ---------------------------------------------------------------
 function encode(text) {
-  const lang = /[А-Яа-яЁё]/.test(text) ? 'RU' : 'EN';
+  const lang = /[\u0400-\u04FF]/.test(text) ? 'RU' : 'EN';
   const t = T[lang], cells = [], skipped = new Set();
-  const words = text.toUpperCase().split(/\s+/).filter(Boolean);
+  const words = [...text].map(c => c === 'ß' ? c : c.toUpperCase()).join('').split(/\s+/).filter(Boolean);  // keep ß (toUpperCase would make SS)
   for (const w of words) {
     const chars = [...w].filter(c => t[c] ? true : (skipped.add(c), false));
     chars.forEach((c,i) => { cells.push(...t[c], i === chars.length-1 ? 'K' : 'W'); });
@@ -292,7 +294,7 @@ function swatches(code) { return [...code].map(c => `<span class="sw ${NAME[c]}"
 function fillTables() {
   const row = (lang, chars) => chars.split('').map(c => `<span class="item"><b>${c}</b> ${swatches(T[lang][c])}</span>`).join('');
   const byLen = (lang, n, freq) => [...freq].filter(c => T[lang][c].length === n).join('');
-  for (const [lang, freq] of [['EN',EN_FREQ],['RU',RU_FREQ]]) for (const n of [1,2,3,4])
+  for (const [lang, freq] of [['EN',EN_FREQ+EN_EXTRA],['RU',RU_FREQ+RU_EXTRA]]) for (const n of [1,2,3,4])
     $(`t-${lang.toLowerCase()}-${n}`).innerHTML = row(lang, byLen(lang,n,freq)) || '<span class="muted">none</span>';
   $('t-dig').innerHTML = row('EN', DIG); $('t-pun').innerHTML = row('EN', PUN);
 }
@@ -302,7 +304,7 @@ function runEncode() {
   const { grid, side, pad } = square(cells, $('enc-fill').value);
   paint($('enc-canvas'), grid, side, +$('enc-cell').value);
   $('enc-dl').href = $('enc-canvas').toDataURL('image/png');
-  $('enc-info').innerHTML = `${lang === 'RU' ? 'Russian' : 'English'} · ${cells.length} cells + ${pad} empty = ${side} × ${side}` +
+  $('enc-info').innerHTML = `${lang === 'RU' ? 'Cyrillic' : 'Latin'} · ${cells.length} cells + ${pad} empty = ${side} × ${side}` +
     (skipped.length ? ` · <span class="warn">skipped: ${skipped.join(' ')}</span>` : '');
   $('enc-str').textContent = grid.map(c => NAME[c]).join('');
 }
