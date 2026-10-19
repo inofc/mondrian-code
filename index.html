@@ -44,6 +44,11 @@
   nav.back a { display:inline-block; border: 2px solid #c8c8c8; padding: 6px 12px; color:#333; text-decoration:none; font-size:15px; }
   nav.back a:hover { border-color: var(--k); }
   details.fold { margin-top: 18px; }
+  .ghbtn { display:inline-flex; align-items:center; gap:10px; margin-top:16px; background: var(--k); color:#fff; text-decoration:none; padding:10px 16px; font-weight:700; font-size:16px; }
+  .ghbtn:hover { background:#262626; } .ghbtn .gh { width:22px; height:22px; }
+  .ghbtn .ghsub { font-weight:400; font-size:13px; color:#bbb; border-left:1px solid #555; padding-left:10px; }
+  .ghfoot { display:inline-flex; align-items:center; gap:6px; color: var(--k); font-weight:600; }
+  .ghfoot .gh { width:16px; height:16px; }
   h3 { font-size: 20px; margin: 22px 0 8px; }
   .examples { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; margin: 8px 0 28px; }
   .ex { border: var(--line) solid var(--k); padding: 14px; display:flex; flex-direction:column; align-items:center; text-align:center; }
@@ -75,6 +80,7 @@
   <div class="title">
     <h1>Mondrian Code</h1>
     <p>A writing system in Piet Mondrian's five colours. Red, yellow and blue carry the letters; white and black are the punctuation of the grid. Any text becomes a square painting, and every painting can be read back.</p>
+    <a class="ghbtn" href="https://github.com/inofc/mondrian-code"><svg class="gh" viewBox="0 0 16 16" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg><span>Source code on GitHub</span><span class="ghsub">open source · MIT</span></a>
   </div>
   <div class="r"></div>
   <div class="yb"><div></div><div></div></div>
@@ -228,7 +234,7 @@
 </main>
 <footer>
   <span>Mondrian Code v3 · designed by <a href="https://inofc.github.io">Nick Gushchin</a> · October 2026</span>
-  <span>Open source, MIT · <a href="https://github.com/inofc/mondrian-code">source</a></span>
+  <a class="ghfoot" href="https://github.com/inofc/mondrian-code"><svg class="gh" viewBox="0 0 16 16" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> github.com/inofc/mondrian-code</a>
 </footer>
 
 <script>
