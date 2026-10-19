@@ -233,7 +233,7 @@
   <tr><td>Binary Huffman (ZIP-style)</td><td>2</td><td>4.20</td><td>4.20 bits</td><td>99%</td></tr>
   <tr><td>Fixed ternary, 3 trits</td><td>3</td><td>3</td><td>4.75 bits</td><td>88%</td></tr>
   <tr><td>Ternary Huffman, no separators</td><td>3</td><td>2.70</td><td>4.28 bits</td><td>97%</td></tr>
-  <tr><td>Mondrian Code v1 (3 cells + marker)</td><td>5</td><td>4</td><td>9.29 bits</td><td>45%</td></tr>
+  <!-- <tr><td>Mondrian Code v1 (3 cells + marker)</td><td>5</td><td>4</td><td>9.29 bits</td><td>45%</td></tr> -->
   <tr><td><b>Mondrian Code v4</b> (1.89 colour cells + marker)</td><td>5</td><td><b>2.89</b></td><td>6.71 bits</td><td>62%</td></tr>
 </table></div>
 <p><b>What the numbers say.</b> Mondrian Code needs the <b>fewest squares</b> of any code here that a person can read by eye: 2.89 per letter, against 4.20 bits for the best binary Huffman code (31% fewer) and 8 for ASCII (64% fewer). That is the advantage of three colours over two. But each square can show 5 states, and the white and black markers use part of that capacity, so in pure information terms it is about <b>62% efficient</b>, where Huffman codes reach 97–99%. The markers are what you pay for being able to see where every letter ends and to recover after a misread cell. In real text the gap narrows: about one character in six is a space, which binary codes must store and Mondrian Code gets free inside the black marker.</p>
