@@ -100,6 +100,20 @@
 <p><b>4. Empty cells carry no meaning.</b> A marker that follows another marker (or opens the grid) is a filler and is skipped. That lets any text fill a perfect square: side = √(cells), rounded up, with the spare white cells spread evenly between characters.</p>
 <p><b>5. Read like a book.</b> Row by row, left to right, from the top-left corner.</p>
 
+<h2 class="y">Where the ideas come from</h2>
+<p>Nothing here is new on its own. Each rule borrows one idea that already runs the digital world, which is what makes the code a good teaching tool.</p>
+<table>
+  <tr><th style="width:30%">Mondrian Code rule</th><th>Same idea in</th><th style="width:22%">Since</th></tr>
+  <tr><td>Frequent letters get the shortest codes</td><td><b>Huffman coding</b>: give the most frequent symbols the shortest codes, and the average message gets shorter. It is inside <b>ZIP</b>, gzip and PNG (all built on DEFLATE = LZ77 + Huffman), and in <b>JPEG</b> and <b>MP3</b>.</td><td>David Huffman, MIT, 1952</td></tr>
+  <tr><td>E is one cell, Q is three</td><td><b>Morse code</b>: E is a single dot, Q is four signals, because the designers counted how often printers used each letter.</td><td>Morse and Vail, 1830s–40s</td></tr>
+  <tr><td>Frequent pieces become short codes</td><td><b>LLM tokenizers</b> (byte-pair encoding): common words and word parts become a single token, rare ones are split into several.</td><td>BPE 1994, GPT-2 2019</td></tr>
+  <tr><td>Characters of different length, kept in sync by markers</td><td><b>UTF-8</b>: a character is 1 to 4 bytes, and the leading bits of each byte say “new character” or “continuation”, so a reader can recover after damage.</td><td>Thompson and Pike, 1992</td></tr>
+  <tr><td>White / black closes each character</td><td><b>Start and stop bits</b> on a serial line: every byte is framed so the receiver knows where it ends. Morse does the same with pauses.</td><td>Teleprinters, early 1900s</td></tr>
+  <tr><td>Empty cells are skipped</td><td><b>Padding</b>: QR codes and file formats fill unused space with patterns the reader knows to ignore.</td><td>QR code, 1994</td></tr>
+  <tr><td>Three colours = trits</td><td><b>Ternary computing</b>: the Setun computer at Moscow State University calculated in three states.</td><td>1958</td></tr>
+</table>
+<p><b>How close to Huffman is it?</b> Weighted by how often each letter appears in English, a letter takes <b>1.89 colour cells</b> on average, instead of 3 in a fixed-length ternary code. Shannon's limit for a ternary code with no separators is about <b>2.63 cells</b> per English letter. Mondrian Code goes below that on colour cells only because it adds a white or black marker to every character (2.89 cells in total). That is the deliberate trade-off: a true Huffman code is <i>prefix-free</i>, so it needs no separators, but it is hard to read by eye and one misread cell can scramble everything after it. Mondrian Code pays one marker per character for readability and recovery. Against a fixed 3-cell code plus marker (4 cells), text is about 28% shorter.</p>
+
 <h2 class="k">The alphabet</h2>
 <p class="muted">The same colours mean different letters in English and Russian, so the reader needs to know the language. Digits and punctuation are shared.</p>
 <table>
