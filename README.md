@@ -1,6 +1,6 @@
 # Mondrian Code
 
-A writing system in Piet Mondrian's five colours. Write any Latin-script (English, German, Swiss German, French, Spanish, Nordic…) or Cyrillic text (Russian, Ukrainian, Serbian…) as a square colour grid, and read it back.
+A writing system in Piet Mondrian's five colours. Write any text in Latin script (English, German, Swiss German, French, Italian, Spanish, Portuguese, Dutch, Danish, Norwegian, Swedish, Finnish…), Cyrillic (Russian, Ukrainian, Belarusian, Bulgarian, Serbian, Macedonian) or Chinese as a square colour grid, and read it back.
 
 **Try it:** https://inofc.github.io/mondrian-code/
 
