@@ -136,6 +136,18 @@
     <div class="ex-arrow">↓ paints bottom to top</div>
     <canvas class="ex-img" data-text="Grüezi mitenand" data-dir="BT"></canvas>
   </div>
+  <div class="ex">
+    <div class="ex-tag">Painting → text</div>
+    <canvas class="ex-img" data-text="안녕하세요"></canvas>
+    <div class="ex-arrow">↓ reads as</div>
+    <div class="ex-text">안녕하세요</div>
+  </div>
+  <div class="ex">
+    <div class="ex-tag">Text → painting, read ←</div>
+    <div class="ex-text">שלום עולם</div>
+    <div class="ex-arrow">↓ paints right to left</div>
+    <canvas class="ex-img" data-text="שלום עולם" data-dir="RL"></canvas>
+  </div>
 </div>
 
   </div>
@@ -146,11 +158,13 @@
   <div class="try-body">
 <h3>Write: text → painting</h3>
 <div class="tool">
-  <label for="enc-in"><b>Your text</b> <span class="muted">(Latin, Cyrillic or Chinese: English, German, French, Italian, Spanish, Russian, Ukrainian, 中文…)</span></label>
+  <label for="enc-in"><b>Your text</b> <span class="muted">(English, Deutsch, Français, Русский, 中文, 한국어, 日本語, العربية, עברית, Ελληνικά, हिन्दी, አማርኛ, Kiswahili, Yorùbá…)</span></label>
   <textarea id="enc-in">Hello world</textarea>
   <div class="row">
     <div><label class="muted" for="enc-cell">Cell size</label>
       <select id="enc-cell"><option value="40" selected>Small</option><option value="80">Medium</option><option value="140">Large (print)</option></select></div>
+    <div><label class="muted" for="enc-lang">Script</label>
+      <select id="enc-lang"><option value="" selected>Automatic</option><option value="EN">Latin</option><option value="RU">Cyrillic</option><option value="ZH">Chinese</option><option value="KO">Korean</option><option value="JA">Japanese</option><option value="AR">Arabic</option><option value="HE">Hebrew</option><option value="EL">Greek</option><option value="HI">Hindi</option><option value="GZ">Ge'ez (Amharic)</option></select></div>
     <div><label class="muted" for="enc-dir">Reading direction</label>
       <select id="enc-dir"><option value="LR" selected>→ Left to right</option><option value="RL">← Right to left</option><option value="TB">↓ Top to bottom</option><option value="BT">↑ Bottom to top</option></select></div>
   </div>
@@ -169,7 +183,7 @@
 <div class="tool">
   <div class="row">
     <div><label for="dec-lang"><b>Script</b> <span class="muted">(found automatically from the key)</span></label>
-      <select id="dec-lang"><option value="">Automatic</option><option value="EN">Latin</option><option value="RU">Cyrillic</option><option value="ZH">Chinese</option></select></div>
+      <select id="dec-lang"><option value="">Automatic</option><option value="EN">Latin</option><option value="RU">Cyrillic</option><option value="ZH">Chinese</option><option value="KO">Korean</option><option value="JA">Japanese</option><option value="AR">Arabic</option><option value="HE">Hebrew</option><option value="EL">Greek</option><option value="HI">Hindi</option><option value="GZ">Ge'ez (Amharic)</option></select></div>
     <div><label for="dec-file"><b>Upload a painting or a line</b> <span class="muted">(PNG made on this page)</span></label>
       <input type="file" id="dec-file" accept="image/*"></div>
   </div>
@@ -191,7 +205,7 @@
 <p><b>3. White and black close every character.</b> After its colour cells, each character ends with a marker: <span class="sw W"></span> white = end of a letter, <span class="sw K"></span> black = end of a word, so no space is needed. Because characters vary in length, this end signal is what keeps the reader in sync, just like the start and stop bits on a serial cable or the prefixes in UTF-8.</p>
 <p><b>4. Empty cells carry no meaning.</b> A marker that follows another marker (or opens the grid) is a filler and is skipped. That lets any text fill a perfect square: side = √(cells), rounded up, with the spare white cells spread evenly between characters.</p>
 <p><b>5. Four reading directions.</b> A painting can be written left to right, right to left, top to bottom or bottom to top: row by row, or column by column. A text can also be written as a single <b>line</b>, read left to right: the same cells without the square and without the key, handy for signatures, borders and banners.</p>
-<p><b>6. A direction key tells the reader which way, and which script.</b> Every painting carries one key: <b>8 colour cells in a row</b>, <span class="sw R"></span><span class="sw Y"></span><span class="sw B"></span><span class="sw R"></span><span class="sw Y"></span><span class="sw B"></span><span class="sw R"></span> followed by one cell for the script (<span class="sw R"></span> Latin, <span class="sw Y"></span> Cyrillic, <span class="sw B"></span> Chinese). No character is longer than 7 cells, so this run can never appear inside text, and the key is always unique. Its place is fixed by the <b>Fibonacci sequence</b>: in a grid of side <i>n</i>, the key starts at cell F(<i>n</i>) mod <i>n</i>², counted in reading order (6 × 6 → cell 8, 8 × 8 → cell 21, 9 × 9 → cell 34). The reader tries all four directions and keeps the one where the key sits exactly at its Fibonacci cell. That also tells it the script, so nobody has to say which language a painting is in.</p>
+<p><b>6. A direction key tells the reader which way, and which script.</b> Every painting carries one key: <b>8 colour cells in a row</b>. No character is longer than 7 cells, so this run can never appear inside text, and the key is always unique. The first 5 cells are fixed (<span class="sw R"></span><span class="sw Y"></span><span class="sw B"></span><span class="sw R"></span><span class="sw Y"></span>); the last 3 name the script, which gives 3 × 3 × 3 = <b>27 script slots</b> (10 in use, listed in the alphabet below). Its place is fixed by the <b>Fibonacci sequence</b>: in a grid of side <i>n</i>, the key starts at cell F(<i>n</i>) mod <i>n</i>², counted in reading order (6 × 6 → cell 8, 8 × 8 → cell 21, 9 × 9 → cell 34). The reader tries all four directions and keeps the one where the key sits exactly at its Fibonacci cell. That also tells it the script, so nobody has to say which language a painting is in. Right-to-left scripts such as Hebrew and Arabic simply use the ← direction.</p>
 <p><b>7. Any other character still fits.</b> A special escape code is followed by the character's Unicode number in two 6-cell parts, so emoji and rare characters survive too.</p>
 
 <h2 class="y">Where the ideas come from</h2>
@@ -204,7 +218,7 @@
   <tr><td>Characters of different length, kept in sync by markers</td><td><b>UTF-8</b>: a character is 1 to 4 bytes, and the leading bits of each byte say “new character” or “continuation”, so a reader can recover after damage.</td><td>Thompson and Pike, 1992</td></tr>
   <tr><td>White / black closes each character</td><td><b>Start and stop bits</b> on a serial line: every byte is framed so the receiver knows where it ends. Morse does the same with pauses.</td><td>Teleprinters, early 1900s</td></tr>
   <tr><td>Empty cells are skipped</td><td><b>Padding</b>: QR codes and file formats fill unused space with patterns the reader knows to ignore.</td><td>QR code, 1994</td></tr>
-  <tr><td>A direction key at a fixed place</td><td><b>QR codes</b>: three corner squares (finder patterns) tell the scanner which way up the code is. Radio and telecom links use <b>sync words</b>, bit patterns that mark where a frame begins.</td><td>QR code 1994</td></tr>
+  <tr><td>A direction key at a fixed place, naming one of 27 scripts</td><td><b>QR codes</b>: three corner squares (finder patterns) tell the scanner which way up the code is. Radio and telecom links use <b>sync words</b>, bit patterns that mark where a frame begins.</td><td>QR code 1994</td></tr>
   <tr><td>Key position from Fibonacci</td><td>The <b>Fibonacci sequence</b> 1, 1, 2, 3, 5, 8, 13, 21, 34…, where each number is the sum of the two before.</td><td>Fibonacci, 1202</td></tr>
   <tr><td>Three colours = trits</td><td><b>Ternary computing</b>: the Setun computer at Moscow State University calculated in three states.</td><td>1958</td></tr>
 </table></div>
@@ -220,18 +234,21 @@
   <tr><td>Fixed ternary, 3 trits</td><td>3</td><td>3</td><td>4.75 bits</td><td>88%</td></tr>
   <tr><td>Ternary Huffman, no separators</td><td>3</td><td>2.70</td><td>4.28 bits</td><td>97%</td></tr>
   <tr><td>Mondrian Code v1 (3 cells + marker)</td><td>5</td><td>4</td><td>9.29 bits</td><td>45%</td></tr>
-  <tr><td><b>Mondrian Code v3</b> (1.89 colour cells + marker)</td><td>5</td><td><b>2.89</b></td><td>6.71 bits</td><td>62%</td></tr>
+  <tr><td><b>Mondrian Code v4</b> (1.89 colour cells + marker)</td><td>5</td><td><b>2.89</b></td><td>6.71 bits</td><td>62%</td></tr>
 </table></div>
 <p><b>What the numbers say.</b> Mondrian Code needs the <b>fewest squares</b> of any code here that a person can read by eye: 2.89 per letter, against 4.20 bits for the best binary Huffman code (31% fewer) and 8 for ASCII (64% fewer). That is the advantage of three colours over two. But each square can show 5 states, and the white and black markers use part of that capacity, so in pure information terms it is about <b>62% efficient</b>, where Huffman codes reach 97–99%. The markers are what you pay for being able to see where every letter ends and to recover after a misread cell. In real text the gap narrows: about one character in six is a space, which binary codes must store and Mondrian Code gets free inside the black marker.</p>
 
 <h2 class="k">The alphabet</h2>
-<p><b>Which languages it writes.</b> Three scripts, each with its own frequency table, cover most of the languages of Europe and East Asia:</p>
+<p><b>Which languages it writes.</b> Ten scripts, each with its own frequency table, cover most of the world's population:</p>
 <ul>
-  <li><b>Latin</b> (ordered by English letter frequency): English, German, Swiss German, French, Italian, Spanish, Portuguese, Dutch, Danish, Norwegian, Swedish, Finnish, plus Romansh and the other Latin-script languages that use these letters.</li>
+  <li><b>Latin</b> (ordered by English letter frequency): English, German, Swiss German, French, Italian, Spanish, Portuguese, Dutch, Danish, Norwegian, Swedish, Finnish, Romansh, and in Africa Swahili, Zulu, Xhosa, Somali, Afrikaans, Yoruba, Hausa, Igbo, Wolof and Lingala.</li>
   <li><b>Cyrillic</b> (ordered by Russian letter frequency): Russian, Ukrainian, Belarusian, Bulgarian, Serbian and Macedonian.</li>
   <li><b>Chinese</b>: the 3,249 most common Chinese characters (Mandarin, simplified).</li>
+  <li><b>Korean</b>: Hangul, written as its letters (jamo) and rebuilt into syllable blocks when read.</li>
+  <li><b>Japanese</b>: hiragana and katakana; kanji go through the escape code.</li>
+  <li><b>Arabic</b> (with Persian letters), <b>Hebrew</b>, <b>Greek</b>, <b>Hindi</b> and other languages in Devanagari (Marathi, Nepali), and <b>Ge'ez</b> for Amharic and Tigrinya.</li>
 </ul>
-<p class="muted">Any letter outside these tables (Polish Ł, Czech Ř, Turkish Ğ, an emoji…) still works through the escape code. The same colours mean different letters in each script; the direction key tells the reader which one. Digits and punctuation are shared.</p>
+<p class="muted">Script cells in the key: Latin <span class="sw B"></span><span class="sw R"></span><span class="sw R"></span>, Cyrillic <span class="sw B"></span><span class="sw R"></span><span class="sw Y"></span>, Chinese <span class="sw B"></span><span class="sw R"></span><span class="sw B"></span>. Any letter outside these tables (Polish Ł, Czech Ř, Turkish Ğ, an emoji…) still works through the escape code. The same colours mean different letters in each script; the direction key tells the reader which one. Digits and punctuation are shared.</p>
 <div class="tablewrap"><table class="alpha">
   <colgroup><col style="width:130px"><col><col></colgroup>
   <tr><th>Cells</th><th>Latin</th><th>Cyrillic</th></tr>
@@ -243,6 +260,11 @@
   <tr><td>Digits (3)</td><td class="codes" colspan="2" id="t-dig"></td></tr>
   <tr><td>Punctuation (4)</td><td class="codes" colspan="2" id="t-pun"></td></tr>
 </table></div>
+<h3>The other scripts</h3>
+<div class="tablewrap"><table>
+  <tr><th style="width:150px">Script (key cells)</th><th>Shortest codes</th><th style="width:90px">Symbols</th></tr>
+  <tbody id="t-other"></tbody>
+</table></div>
 
 <h2>What it is good for</h2>
 <p><b>Signature and art:</b> a name, a date or a motto hidden in a logo, a poster or a print. <b>Teaching:</b> encode your own name and you have learned bits, bytes, variable-length codes, error checking and why an LLM turns words into tokens, in ten minutes. <b>Puzzles:</b> decode-the-poster challenges.</p>
@@ -252,7 +274,7 @@
 </details>
 </main>
 <footer>
-  <span>Mondrian Code v3 · designed by <a href="https://inofc.github.io">Nick Gushchin</a> · October 2026</span>
+  <span>Mondrian Code v4 · designed by <a href="https://inofc.github.io">Nick Gushchin</a> · October 2026</span>
   <a class="ghfoot" href="https://github.com/inofc/mondrian-code"><svg class="gh" viewBox="0 0 16 16" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> github.com/inofc/mondrian-code</a>
 </footer>
 
@@ -264,10 +286,10 @@ const RU_FREQ = 'ОЕАИНТСРВЛКМДПУЯЫЬГЗБЧЙХЖШЮЦЩЭФ�
 // The 3,249 most frequent Chinese characters (Jun Da, Modern Chinese corpus): 99.4% of running text.
 const ZH_FREQ = '的一是不了在人有我他这个们中来上大为和国地到以说时要就出会可也你对生能而子那得于着下自之年过发后作里用道行所然家种事成方多经么去法学如都同现当没动面起看定天分还进好小部其些主样理心她本前开但因只从想实日军者意无力它与长把机十民第公此已工使情明性知全三又关点正业外将两高间由问很最重并物手应战向头文体政美相见被利什二等产或新己制身果加西斯月话合回特代内信表化老给世位次度门任常先海通教儿原东声提立及比员解水名真论处走义各入几口认条平系气题活尔更别打女变四神总何电数安少报才结反受目太量再感建务做接必场件计管期市直德资命山金指克许统区保至队形社便空决治展马科司五基眼书非则听白却界达光放强即像难且权思王象完设式色路记南品住告类求据程北边死张该交规万取拉格望觉术领共确传师观清今切院让识候带导争运笑飞风步改收根干造言联持组每济车亲极林服快办议往元英士证近失转夫令准布始怎呢存未远叫台单影具罗字爱击流备兵连调深商算质团集百需价花党华城石级整府离况亚请技际约示复病息究线似官火断精满支视消越器容照须九增研写称企八功吗包片史委乎查轻易早曾除农找装广显吧阿李标谈吃图念六引历首医局突专费号尽另周较注语仅考落青随选列武红响虽推势参希古众构房半节土投某案黑维革划敌致陈律足态护七兴派孩验责营星够章音跟志底站严巴例防族供效续施留讲型料终答紧黄绝奇察母京段依批群项故按河米围江织害斗双境客纪采举杀攻父苏密低朝友诉止细愿千值仍男钱破网热助倒育属坐帝限船脸职速刻乐否刚威毛状率甚独球般普怕弹校苦创假久错承印晚兰试股拿脑预谁益阳若哪微尼继送急血惊伤素药适波夜省初喜卫源食险待述陆习置居劳财环排福纳欢雷警获模充负云停木游龙树疑层冷洲冲射略范竟句室异激汉村哈策演简卡罪判担州静退既衣您宗积余痛检差富灵协角占配征修皮挥胜降阶审沉坚善妈刘读啊超免压银买皇养伊怀执副乱抗犯追帮宣佛岁航优怪香著田铁控税左右份穿艺背阵草脚概恶块顿敢守酒岛托央户烈洋哥索胡款靠评版宝座释景顾弟登货互付伯慢欧换闻危忙核暗姐介坏讨丽良序升监临亮露永呼味野架域沙掉括舰鱼杂误湾吉减编楚肯测败屋跑梦散温困剑渐封救贵枪缺楼县尚毫移娘朋画班智亦耳恩短掌恐遗固席松秘谢鲁遇康虑幸均销钟诗藏赶剧票损忽巨炮旧端探湖录叶春乡附吸予礼港雨呀板庭妇归睛饭额含顺输摇招婚脱补谓督毒油疗旅泽材灭逐莫笔亡鲜词圣择寻厂睡博勒烟授诺伦岸奥唐卖俄炸载洛健堂旁宫喝借君禁阴园谋宋避抓荣姑孙逃牙束跳顶玉镇雪午练迫爷篇肉嘴馆遍凡础洞卷坦牛宁纸诸训私庄祖丝翻暴森塔默握戏隐熟骨访弱蒙歌店鬼软典欲萨伙遭盘爸扩盖弄雄稳忘亿刺拥徒姆杨齐赛趣曲刀床迎冰虚玩析窗醒妻透购替塞努休虎扬途侵刑绿兄迅套贸毕唯谷轮库迹尤竞街促延震弃甲伟麻川申缓潜闪售灯针哲络抵朱埃抱鼓植纯夏忍页杰筑折郑贝尊吴秀混臣雅振染盛怒舞圆搞狂措姓残秋培迷诚宽宇猛摆梅毁伸摩盟末乃悲拍丁赵硬麦蒋操耶阻订彩抽赞魔纷沿喊违妹浪汇币丰蓝殊献桌啦瓦莱援译夺汽烧距裁偏符勇触课敬哭懂墙袭召罚侠厅拜巧侧韩冒债曼融惯享戴童犹乘挂奖绍厚纵障讯涉彻刊丈爆乌役描洗玛患妙镜唱烦签仙彼弗症仿倾牌陷鸟轰咱菜闭奋庆撤泪茶疾缘播朗杜奶季丹狗尾仪偷奔珠虫驻孔宜艾桥淡翼恨繁寒伴叹旦愈潮粮缩罢聚径恰挑袋灰捕徐珍幕映裂泰隔启尖忠累炎暂估泛荒偿横拒瑞忆孤鼻闹羊呆厉衡胞零穷舍码赫婆魂灾洪腿胆津俗辩胸晓劲贫仁偶辑邦恢赖圈摸仰润堆碰艇稍迟辆废净凶署壁御奉旋冬矿抬蛋晨伏吹鸡倍糊秦盾杯租骑乏隆诊奴摄丧污渡旗甘耐凭扎抢绪粗肩梁幻菲皆碎宙叔岩荡综爬荷悉蒂返井壮薄悄扫敏碍殖详迪矛霍允幅撒剩凯颗骂赏液番箱贴漫酸郎腰舒眉忧浮辛恋餐吓挺励辞艘键伍峰尺昨黎辈贯侦滑券崇扰宪绕趋慈乔阅汗枝拖墨胁插箭腊粉泥氏彭拔骗凤慧媒佩愤扑龄驱惜豪掩兼跃尸肃帕驶堡届欣惠册储飘桑闲惨洁踪勃宾频仇磨递邪撞拟滚奏巡颜剂绩贡疯坡瞧截燃焦殿伪柳锁逼颇昏劝呈搜勤戒驾漂饮曹朵仔柔俩孟腐幼践籍牧凉牲佳娜浓芳稿竹腹跌逻垂遵脉貌柏狱猜怜惑陶兽帐饰贷昌叙躺钢沟寄扶铺邓寿惧询汤盗肥尝匆辉奈扣廷澳嘛董迁凝慰厌脏腾幽怨鞋丢埋泉涌辖躲晋紫艰魏吾慌祝邮吐狠鉴曰械咬邻赤挤弯椅陪割揭韦悟聪雾锋梯猫祥阔誉筹丛牵鸣沈阁穆屈旨袖猎臂蛇贺柱抛鼠瑟戈牢逊迈欺吨琴衰瓶恼燕仲诱狼池疼卢仗冠粒遥吕玄尘冯抚浅敦纠钻晶岂峡苍喷耗凌敲菌赔涂粹扁亏寂煤熊恭湿循暖糖赋抑秩帽哀宿踏烂袁侯抖夹昆肝擦猪炼恒慎搬纽纹玻渔磁铜齿跨押怖漠疲叛遣兹祭醉拳弥斜档稀捷肤疫肿豆削岗晃吞宏癌肚隶履涨耀扭坛拨沃绘伐堪仆郭牺歼墓雇廉契拼惩捉覆刷劫嫌瓜歇雕闷乳串娃缴唤赢莲霸桃妥瘦搭赴岳嘉舱俊址庞耕锐缝悔邀玲惟斥宅添挖呵讼氧浩羽斤酷掠妖祸侍乙妨贪挣汪尿莉悬唇翰仓轨枚盐览傅帅庙芬屏寺胖璃愚滴疏萧姿颤丑劣柯寸扔盯辱匹俱辨饿蜂哦腔郁溃谨糟葛苗肠忌溜鸿爵鹏鹰笼丘桂滋聊挡纲肌茨壳痕碗穴膀卓贤卧膜毅锦欠哩函茫昂薛皱夸豫胃舌剥傲拾窝睁携陵哼棉晴铃填饲渴吻扮逆脆喘罩卜炉柴愉绳胎蓄眠竭喂傻慕浑奸扇柜悦拦诞饱乾泡贼亭夕爹酬儒姻卵氛泄杆挨僧蜜吟猩遂狭肖甜霞驳裕顽於摘矮秒卿畜咽披辅勾盆疆赌塑畏吵囊嗯泊肺骤缠冈羞瞪吊贾漏斑涛悠鹿俘锡卑葬铭滩嫁催璇翅盒蛮矣潘歧赐鲍锅廊拆灌勉盲宰佐啥胀扯禧辽抹筒棋裤唉朴咐孕誓喉妄拘链驰栏逝窃艳臭纤玑棵趁匠盈翁愁瞬婴孝颈倘浙谅蔽畅赠妮莎尉冻跪闯葡後厨鸭颠遮谊圳吁仑辟瘤嫂陀框谭亨钦庸歉芝吼甫衫摊宴嘱衷娇陕矩浦讶耸裸碧摧薪淋耻胶屠鹅饥盼脖虹翠崩账萍逢赚撑翔倡绵猴枯巫昭怔渊凑溪蠢禅阐旺寓藤匪伞碑挪琼脂谎慨菩萄狮掘抄岭晕逮砍掏狄晰罕挽脾舟痴蔡剪脊弓懒叉拐喃僚捐姊骚拓歪粘柄坑陌窄湘兆崖骄刹鞭芒筋聘钩棍嚷腺弦焰耍俯厘愣厦恳饶钉寡憾摔叠惹喻谱愧煌徽溶坠煞巾滥洒堵瓷咒姨棒郡浴媚稣淮哎屁漆淫巢吩撰啸滞玫硕钓蝶膝姚茂躯吏猿寨恕渠戚辰舶颁惶狐讽笨袍嘲啡泼衔倦涵雀旬僵撕肢垄夷逸茅侨舆窑涅蒲谦杭噢弊勋刮郊凄捧浸砖鼎篮蒸饼亩肾陡爪兔殷贞荐哑炭坟眨搏咳拢舅昧擅爽咖搁禄雌哨巩绢螺裹昔轩谬谍龟媳姜瞎冤鸦蓬巷琳栽沾诈斋瞒彪厄咨纺罐桶壤糕颂膨谐垒咕隙辣绑宠嘿兑霉挫稽辐乞纱裙嘻哇绣杖塘衍轴攀膊譬斌祈踢肆坎轿棚泣屡躁邱凰溢椎砸趟帘帆栖窜丸斩堤塌贩厢掀喀乖谜捏阎滨虏匙芦苹卸沼钥株祷剖熙哗劈怯棠胳桩瑰娱娶沫嗓蹲焚淘嫩韵衬匈钧竖峻豹捞菊鄙魄兜哄颖镑屑蚁壶怡渗秃迦旱哟咸焉谴宛稻铸锻伽詹毙恍贬烛骇芯汁桓坊驴朽靖佣汝碌迄冀荆崔雁绅珊榜诵傍彦醇笛禽勿娟瞄幢寇睹贿踩霆呜拱妃蔑谕缚诡篷淹腕煮倩卒勘馨逗甸贱炒灿敞蜡囚栗辜垫妒魁谣寞蜀甩涯枕丐泳奎泌逾叮黛燥掷藉枢憎鲸弘倚侮藩拂鹤蚀浆芙垃烤晒霜剿蕴圾绸屿氢驼妆捆铅逛淑榴丙痒钞蹄犬躬昼藻蛛褐颊奠募耽蹈陋侣魅岚侄虐堕陛莹荫狡阀绞膏垮茎缅喇绒搅凳梭丫姬诏钮棺耿缔懈嫉灶匀嗣鸽澡凿纬沸畴刃遏烁嗅叭熬瞥骸奢拙栋毯桐砂莽泻坪梳杉晤稚蔬蝇捣顷麽尴镖诧尬硫嚼羡沦沪旷彬芽狸冥碳咧惕暑咯萝汹腥窥俺潭崎麟捡拯厥澄萎哉涡滔暇溯鳞酿茵愕瞅暮衙诫斧兮焕棕佑嘶妓喧蓉删樱伺嗡娥梢坝蚕敷澜杏绥冶庇挠搂倏聂婉噪稼鳍菱盏匿吱寝揽髓秉哺矢啪帜邵嗽挟缸揉腻驯缆晌瘫贮觅朦僻隋蔓咋嵌虔畔琐碟涩胧嘟蹦冢浏裔襟叨诀旭虾簿啤擒枣嘎苑牟呕骆凸熄兀喔裳凹赎屯膛浇灼裘砰棘橡碱聋姥瑜毋娅沮萌俏黯撇粟粪尹苟癫蚂禹廖俭帖煎缕窦簇棱叩呐瑶墅莺烫蛙歹伶葱哮眩坤廓讳啼乍瓣矫跋枉梗厕琢讥釉窟敛轼庐胚呻绰扼懿炯竿慷虞锤栓桨蚊磅孽惭戳禀鄂馈垣溅咚钙礁彰豁眯磷雯墟迂瞻颅琉悼蝴拣渺眷悯汰慑婶斐嘘镶炕宦趴绷窘襄珀嚣拚酌浊毓撼嗜扛峭磕翘槽淌栅颓熏瑛颐忖牡缀徊梨肪涕惫摹踱肘熔挚氯凛绎庶脯迭睦窍粥庵沧怠沁奕咙氨矗盔拇沛榻揣崭鞘鞠垦洽唾橱仕蜘痰袜峙柬蝉蟹谏鹃擎皓朕疤禺铲酶钝氓匣弧峨锥揪杠吭崛诬冉抒庚悍靡晦醋壕锯夭咦侈婢猾徘硝煽皂舵嗦狈靴捂疮郝苛秽茜搓芸酱赁檐饷蕉铀苔赦缎舷筷朔婪紊厮婿寥兢糙卦槐扒裴祀埔絮芭屉痪霄绽宵邑霖岔饵茄韧琪邹瑚憋殆噜忒忿衅淳悖髦孜粤隘濒铮畸剔坞篱淀蓦唬锣汀趾缉嫦斟鞍扳拴诅谟呃懦逞犁忏拧亥佟叱舜绊龚腮邸椒蔚湛狩眶栈薇肮瀑渣褂叽臀妞巍唔疚鲤戎肇笃辙娴阮札懊焘恤疹潇铝涤恃喽砌遁楞阱咎洼炳噬枫拷哆矶苇翩窒侬靶胰芜辫嚎妾幌踉佃葫皖拽滤';
 const DIG = '0123456789', PUN = '.,?!-:;"()';
-const EN_EXTRA = 'ÄÖÜßÉÈÊËÀÂÁÇÎÏÍÔÓÛÙÚÑÃÕÅÆØŒÌÒ';   // German / Swiss German, French, Spanish, Portuguese, Nordic, Italian
+const EN_EXTRA = 'ÄÖÜßÉÈÊËÀÂÁÇÎÏÍÔÓÛÙÚÑÃÕÅÆØŒÌÒ' + 'ẸỌṢƁƊƘŊƐƆỊỤṄƳƎ';   // German / Swiss German, French, Spanish, Portuguese, Nordic, Italian + African (Yoruba, Hausa, Igbo, Wolof, Lingala…)
 const RU_EXTRA = 'ЄІЇҐЎЂЈЉЊЋЏЃЌЅ';               // Ukrainian, Belarusian, Serbian, Macedonian
-const ESC = { EN: '2222', RU: '2222', ZH: '2222222' };   // escape: the next two 6-cell units hold a Unicode code point
-function table(freq, extra, maxLen) {
+const ESC = { EN: '2222', RU: '2222', ZH: '2222222' };   // escape: the next two 6-cell units hold a Unicode code point (other scripts: set by auto())
+function table(freq, extra, maxLen, esc) {
   const t = {}, tiers = [1,2,3,4,5,6,7].map(tier);
   [...freq.slice(0,3)].forEach((c,i) => t[c]=tiers[0][i]);
   [...freq.slice(3,12)].forEach((c,i) => t[c]=tiers[1][i]);
@@ -276,20 +298,40 @@ function table(freq, extra, maxLen) {
   let rest = [...freq.slice(29) + extra], n = 4;
   rest = [...PUN, ...rest];                                            // tier 4 starts with punctuation, same in every script
   while (rest.length && n <= maxLen) { const slots = tiers[n-1]; let i = 0;
-    while (rest.length && i < slots.length) { if (slots[i] !== ESC[maxLen === 7 ? 'ZH' : 'EN']) t[rest.shift()] = slots[i]; i++; }
+    while (rest.length && i < slots.length) { if (slots[i] !== esc) t[rest.shift()] = slots[i]; i++; }
     n++; }
   return t;
 }
-const T = { EN: table(EN_FREQ, EN_EXTRA, 4), RU: table(RU_FREQ, RU_EXTRA, 4), ZH: table(ZH_FREQ, '', 7) };
-const SCRIPT = { EN: 'Latin', RU: 'Cyrillic', ZH: 'Chinese' };
+const uniq = s => [...new Set([...s])].join('');
+const range = (a, b, keep = () => true) => { let o = ''; for (let c = a; c <= b; c++) { const ch = String.fromCodePoint(c); if (keep(ch)) o += ch; } return o; };
+const isLetter = ch => /[\p{L}\p{M}]/u.test(ch);
+// Frequency order: most common first. The rest of each block follows in code-point order.
+const KO_FREQ = uniq('아ᅵᄀᄂ드ᅥᆫᄉᄌᆯᄅᄆᄒ보ᅮᅦᅢᅧᆼᆨᆷᆻᄎᄐᄑᄏ' + range(0x1100, 0x1112) + range(0x1161, 0x1175) + range(0x11A8, 0x11C2));   // Hangul jamo: syllables are split into lead / vowel / tail and rebuilt on reading
+const JA_FREQ = uniq('のいにしてとはかたな゙るすをうっれもらこまくあきりつおけそえさせよやわんみめねほへふひぬちゆろ゚ー' + range(0x3041, 0x3096, c => c.normalize('NFD').length === 1) + range(0x30A1, 0x30FA, c => c.normalize('NFD').length === 1) + '・々');   // kana; kanji go through the escape code
+const AR_FREQ = uniq('اليمونرتبعهفقدسكحجةىشصطخضزثذغظءأإآؤئ' + 'پچژگکی' + range(0x064B, 0x0652) + 'ـ');
+const HE_FREQ = uniq('יוהלרמאבתשנדעכםחקפסזטגןצףךץ׳״');
+const EL_FREQ = uniq('ΑΟΕΙΤΝΣΚΠΥΡΜΛΗΔΓΩΘΧΦΒΞΖΨ' + 'ΆΈΉΊΌΎΏΪΫ');
+const HI_FREQ = uniq('ाकरेि्नीसहमतंोलयुवदपजगबैटूअचभथखधउएइशषड़छणठघढफझृौःँआईऊऋऐओऔञङॉ' + range(0x0900, 0x0963, c => isLetter(c) && c.normalize('NFC') === c));
+const GZ_FREQ = uniq('ንትውምስርልበየለተነከመደአእያሆቸላሉገሪቃናዎችሰጠሀ' + range(0x1200, 0x135F, c => isLetter(c)));
+function auto(key, freq) {          // pick the shortest maximum length that fits, reserve 2…2 as escape
+  const need = 10 + Math.max(0, freq.length - 29);
+  let m = 4, cap = 3**4 - 1; while (cap < need) { m++; cap += 3**m; }
+  ESC[key] = '2'.repeat(m);
+  return table(freq, '', m, ESC[key]);
+}
+const T = { EN: table(EN_FREQ, EN_EXTRA, 4, '2222'), RU: table(RU_FREQ, RU_EXTRA, 4, '2222'), ZH: table(ZH_FREQ, '', 7, '2222222'),
+            KO: auto('KO', KO_FREQ), JA: auto('JA', JA_FREQ), AR: auto('AR', AR_FREQ), HE: auto('HE', HE_FREQ),
+            EL: auto('EL', EL_FREQ), HI: auto('HI', HI_FREQ), GZ: auto('GZ', GZ_FREQ) };
+const SCRIPT = { EN: 'Latin', RU: 'Cyrillic', ZH: 'Chinese', KO: 'Korean', JA: 'Japanese', AR: 'Arabic', HE: 'Hebrew', EL: 'Greek', HI: 'Hindi (Devanagari)', GZ: "Ge'ez (Amharic)" };
 const COL = { '0':'#DD2222', '1':'#FAC901', '2':'#225095', 'W':'#FFFFFF', 'K':'#141414' };
 const NAME = { '0':'R', '1':'Y', '2':'B', 'W':'W', 'K':'K' };
 const FROM = { R:'0', Y:'1', B:'2', W:'W', K:'K' };
 
 // ---- direction key ---------------------------------------------------------
 // 8 colour cells in a row: no character is longer than 7, so this run never occurs in text.
-// The first 7 are fixed, the 8th names the script. It starts at cell F(side) mod side², counted in reading order.
-const KEY = '0120120', KEY_SCRIPT = { EN: '0', RU: '1', ZH: '2' };
+// The first 5 are fixed, the last 3 name the script (27 slots). It starts at cell F(side) mod side², counted in reading order.
+// Latin / Cyrillic / Chinese use 200 / 201 / 202, so v3 paintings (key 0120120 + 0/1/2) read unchanged.
+const KEY = '01201', KEY_SCRIPT = { EN: '200', RU: '201', ZH: '202', KO: '000', JA: '001', AR: '002', HE: '010', EL: '011', HI: '012', GZ: '020' };
 const fib = n => { let a = 0, b = 1; for (let i = 0; i < n; i++) [a, b] = [b, a + b]; return a; };
 const keyPos = side => Math.min(fib(side) % (side*side), side*side - 8);
 const DIRS = { LR: 'Left to right', RL: 'Right to left', TB: 'Top to bottom', BT: 'Bottom to top' };
@@ -305,11 +347,26 @@ function order(side, dir) {          // reading order: list of grid indexes (row
 }
 
 // ---- encoder ---------------------------------------------------------------
-const FULLWIDTH = { '，':',', '。':'.', '？':'?', '！':'!', '：':':', '；':';', '（':'(', '）':')', '“':'"', '”':'"', '、':',' };
-function encode(text) {
-  const lang = /[㐀-鿿豈-﫿]/.test(text) ? 'ZH' : /[Ѐ-ӿ]/.test(text) ? 'RU' : 'EN';
+const FULLWIDTH = { '，':',', '。':'.', '？':'?', '！':'!', '：':':', '；':';', '（':'(', '）':')', '“':'"', '”':'"', '、':',', '「':'"', '」':'"',
+                    '،':',', '؟':'?', '؛':';', '।':'.', '॥':'.', '።':'.', '፣':',', '፤':';', '፧':'?', '፡':' ', '־':'-' };
+function detect(text) {
+  if (/[가-힯ᄀ-ᇿ㄰-㆏]/.test(text)) return 'KO';
+  if (/[぀-ヿ]/.test(text)) return 'JA';
+  if (/[㐀-鿿豈-﫿]/.test(text)) return 'ZH';
+  if (/[؀-ۿ]/.test(text)) return 'AR';
+  if (/[֐-׿]/.test(text)) return 'HE';
+  if (/[Ͱ-Ͽ]/.test(text)) return 'EL';
+  if (/[ऀ-ॿ]/.test(text)) return 'HI';
+  if (/[ሀ-፿]/.test(text)) return 'GZ';
+  if (/[Ѐ-ӿ]/.test(text)) return 'RU';
+  return 'EN';
+}
+function encode(text, forced) {
+  const lang = forced || detect(text);
   const t = T[lang], cells = [], skipped = new Set();
-  const norm = [...text].map(c => FULLWIDTH[c] ?? (c === 'ß' ? c : c.toUpperCase())).join('');   // keep ß (toUpperCase would make SS)
+  const nf = (lang === 'KO' || lang === 'JA') ? 'NFD' : 'NFC';   // Hangul syllables -> jamo, voiced kana -> kana + mark
+  const up = c => { if (c === 'ß') return c; const u = c.toUpperCase(); return [...u].length === 1 ? u : c; };   // keep ß and letters whose capital is two characters
+  const norm = [...text.normalize(nf)].map(c => FULLWIDTH[c] ?? up(c)).join('');
   for (const w of norm.split(/\s+/).filter(Boolean)) {
     const units = [];
     for (const c of w) {
@@ -337,7 +394,7 @@ function square(cells, lang, dir = 'LR') {
     let b = 0; for (let i = 0; i < cells.length && i < p; i++) if (cells[i] === 'W' || cells[i] === 'K') b = i+1;   // last boundary before p
     if (p >= cells.length) b = cells.length;
     const before = p - b; if (before > pad) continue;
-    const stream = [...spreadFillers(cells.slice(0,b), before), ...KEY, KEY_SCRIPT[lang], ...spreadFillers(cells.slice(b), pad - before)];
+    const stream = [...spreadFillers(cells.slice(0,b), before), ...KEY, ...KEY_SCRIPT[lang], ...spreadFillers(cells.slice(b), pad - before)];
     const grid = new Array(side*side); order(side, dir).forEach((g,i) => grid[g] = stream[i]);
     return { grid, side, pad, keyAt: p };
   }
@@ -361,10 +418,10 @@ function decodeStream(cells, lang) {
     if (esc === 1) { hi = buf; esc = 2; }
     else if (esc === 2) { out += String.fromCodePoint(parseInt(hi + buf, 3)) + sp; esc = 0; }
     else if (buf === ESC[lang]) esc = 1;
-    else out += (inv[buf] ?? '�') + sp;
+    else out += (inv[buf] ?? '\uFFFD') + sp;
     buf = '';
   }
-  return out.trim();
+  return out.normalize('NFC').trim();
 }
 function readGrid(grid, manualLang) {     // find the direction key, return { text, dir, lang }
   const side = Math.round(Math.sqrt(grid.length)), found = [];
@@ -372,8 +429,8 @@ function readGrid(grid, manualLang) {     // find the direction key, return { te
     const p = keyPos(side);
     for (const dir of Object.keys(DIRS)) {
       const seq = order(side, dir).map(i => grid[i]);
-      const lang = Object.keys(KEY_SCRIPT).find(l => KEY_SCRIPT[l] === seq[p+7]);
-      if (seq.slice(p, p+7).join('') !== KEY || !lang) continue;
+      const lang = Object.keys(KEY_SCRIPT).find(l => KEY_SCRIPT[l] === seq.slice(p+5, p+8).join(''));
+      if (seq.slice(p, p+5).join('') !== KEY || !lang) continue;
       if (p > 0 && seq[p-1] !== 'W' && seq[p-1] !== 'K') continue;      // the key always starts on a character boundary
       const rest = [...seq.slice(0,p), ...seq.slice(p+8)];
       let run = 0, bad = 0; for (const c of rest) { run = (c === 'W' || c === 'K') ? 0 : run + 1; if (run > 7) bad++; }
@@ -439,10 +496,15 @@ function fillTables() {
   for (const [lang, freq] of [['EN',EN_FREQ+EN_EXTRA],['RU',RU_FREQ+RU_EXTRA]]) for (const n of [1,2,3,4])
     $(`t-${lang.toLowerCase()}-${n}`).innerHTML = row(lang, byLen(lang,n,freq)) || '<span class="muted">none</span>';
   $('t-zh').innerHTML = row('ZH', ZH_FREQ.slice(0,29));
+  $('t-other').innerHTML = ['KO','JA','AR','HE','EL','HI','GZ'].map(L => {
+    const chars = Object.keys(T[L]).filter(c => !DIG.includes(c) && !PUN.includes(c)).sort((a,b) => T[L][a].length - T[L][b].length || (T[L][a] < T[L][b] ? -1 : 1)).slice(0,12);
+    const show = c => /[\u0300-\u036F\u3099\u309A\u064B-\u0652\u0900-\u0903\u093A-\u094F]/.test(c) ? '\u25CC' + c : c;
+    return `<tr><td><b>${SCRIPT[L]}</b><br>${swatches(KEY_SCRIPT[L])}</td><td class="codes">${chars.map(c => `<span class="item"><b>${L === 'KO' ? ((c >= '\u11A8' && c <= '\u11C2') ? '\u2011' : '') + c.normalize('NFKC') : show(c)}</b> ${swatches(T[L][c])}</span>`).join('')}</td><td>${Object.keys(T[L]).length - 20} + digits, punctuation</td></tr>`;
+  }).join('');
   $('t-dig').innerHTML = row('EN', DIG); $('t-pun').innerHTML = row('EN', PUN);
 }
 function runEncode() {
-  const { cells, lang, skipped } = encode($('enc-in').value);
+  const { cells, lang, skipped } = encode($('enc-in').value, $('enc-lang').value || undefined);
   if (!cells.length) { $('enc-info').textContent = 'Type some text first.'; return; }
   const { grid, side, pad, keyAt } = square(cells, lang, $('enc-dir').value);
   paint($('enc-canvas'), grid, side, +$('enc-cell').value);

@@ -1,6 +1,6 @@
 # Mondrian Code
 
-A writing system in Piet Mondrian's five colours. Write any text in Latin script (English, German, Swiss German, French, Italian, Spanish, Portuguese, Dutch, Danish, Norwegian, Swedish, Finnish…), Cyrillic (Russian, Ukrainian, Belarusian, Bulgarian, Serbian, Macedonian) or Chinese as a square colour grid, and read it back.
+A writing system in Piet Mondrian's five colours. Write any text in ten scripts (v4): Latin script (English, German, Swiss German, French, Italian, Spanish, Portuguese, Dutch, Danish, Norwegian, Swedish, Finnish…), Cyrillic (Russian, Ukrainian, Belarusian, Bulgarian, Serbian, Macedonian), Chinese, Korean, Japanese kana, Arabic, Hebrew, Greek, Hindi (Devanagari) or Ge'ez (Amharic). African Latin-script languages (Swahili, Yoruba, Hausa, Igbo, Wolof, Lingala…) are covered too as a square colour grid, and read it back.
 
 **Try it:** https://inofc.github.io/mondrian-code/
 
@@ -11,7 +11,7 @@ A writing system in Piet Mondrian's five colours. Write any text in Latin script
 3. **White and black close every character.** White = end of a letter, black = end of a word (no space cell needed).
 4. **Empty cells carry no meaning.** A marker that follows another marker is a filler and is skipped, so any text fills a perfect square (side = √cells, rounded up) with the spare white cells spread evenly between characters.
 5. **Four reading directions:** left to right, right to left, top to bottom, bottom to top.
-6. **Direction key:** 8 colour cells in a row (R Y B R Y B R + one script cell: R Latin, Y Cyrillic, B Chinese). No character is longer than 7 cells, so the run never occurs in text. It starts at cell F(n) mod n² (Fibonacci, n = grid side) in reading order; the reader tries all four directions and keeps the one with the key in place, which also gives the script.
+6. **Direction key:** 8 colour cells in a row: R Y B R Y fixed + 3 script cells (27 slots; Latin BRR, Cyrillic BRY, Chinese BRB, Korean RRR, Japanese RRY, Arabic RRB, Hebrew RYR, Greek RYY, Hindi RYB, Ge'ez RBR). v3 paintings read unchanged. No character is longer than 7 cells, so the run never occurs in text. It starts at cell F(n) mod n² (Fibonacci, n = grid side) in reading order; the reader tries all four directions and keeps the one with the key in place, which also gives the script.
 7. **Escape:** any other Unicode character is written as an escape code plus its code point in two 6-cell parts.
 
 **Chinese:** the 3,249 most frequent characters (Jun Da, Modern Chinese corpus; 99.4% of text) in 1 to 7 cells.
