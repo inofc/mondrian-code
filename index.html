@@ -82,7 +82,7 @@
 
 <main>
 
-<details class="try fold" open>
+<details class="try fold">
   <summary class="c-r">See it: examples</summary>
   <div class="try-body">
 <div class="examples">
@@ -164,7 +164,7 @@
   </div>
 </details>
 
-<details class="try fold" open>
+<details class="try fold">
   <summary class="c-b">How it works</summary>
   <div class="try-body">
 <h2 class="b">The rules</h2>
@@ -423,7 +423,6 @@ $('dec-file').onchange = e => {
     $('dec-in').value = cells.map(c => NAME[c]).join(''); runDecode();
   }; img.src = URL.createObjectURL(f);
 };
-if (window.matchMedia('(max-width: 640px)').matches) document.querySelectorAll('details.fold').forEach(d => d.removeAttribute('open'));   // phones: all sections start folded
 fillTables(); runEncode();
 document.querySelectorAll('.ex-img').forEach(cv => { const { cells, lang } = encode(cv.dataset.text); const { grid, side } = square(cells, lang, cv.dataset.dir || 'LR'); paint(cv, grid, side, 60); });
 </script>
