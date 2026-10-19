@@ -169,13 +169,13 @@
       <select id="enc-dir"><option value="LR" selected>→ Left to right</option><option value="RL">← Right to left</option><option value="TB">↓ Top to bottom</option><option value="BT">↑ Bottom to top</option></select></div>
   </div>
   <button id="enc-go">Paint it</button>
-  <a class="btn ghost" id="enc-dl" download="mondrian-code.png">Download PNG</a>
+  <a class="btn ghost" id="enc-dl" href="#">Download PNG</a>
   <canvas id="enc-canvas" width="10" height="10"></canvas>
   <p class="muted" id="enc-info"></p>
   <p class="muted">Code string (paste it into the reader below): <span class="mono" id="enc-str"></span></p>
   <h3 style="margin-top:22px">The same text as one line <span class="muted" style="font-weight:400">(read left to right, no direction key)</span></h3>
   <div class="linewrap"><canvas id="enc-line" width="10" height="10"></canvas></div>
-  <a class="btn ghost" id="enc-line-dl" download="mondrian-code-line.png">Download line PNG</a>
+  <a class="btn ghost" id="enc-line-dl" href="#">Download line PNG</a>
   <p class="muted">Line code string: <span class="mono" id="enc-line-str"></span></p>
 </div>
 
@@ -503,17 +503,34 @@ function fillTables() {
   }).join('');
   $('t-dig').innerHTML = row('EN', DIG); $('t-pun').innerHTML = row('EN', PUN);
 }
+const PNG = {};   // ready-made files, so the phone share sheet opens straight from the tap
+function prepPng(id, canvas, name) {
+  PNG[id] = null;
+  canvas.toBlob(b => { PNG[id] = new File([b], name, { type: 'image/png' }); });
+}
+function savePng(e) {
+  e.preventDefault();
+  const f = PNG[e.currentTarget.id]; if (!f) return;
+  const mobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
+  if (mobile && navigator.canShare && navigator.canShare({ files: [f] })) {   // iOS: share sheet with Save Image and Save to Files
+    navigator.share({ files: [f] }).catch(() => {});
+    return;
+  }
+  const a = document.createElement('a'), url = URL.createObjectURL(f);
+  a.href = url; a.download = f.name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+}
 function runEncode() {
   const { cells, lang, skipped } = encode($('enc-in').value, $('enc-lang').value || undefined);
   if (!cells.length) { $('enc-info').textContent = 'Type some text first.'; return; }
   const { grid, side, pad, keyAt } = square(cells, lang, $('enc-dir').value);
   paint($('enc-canvas'), grid, side, +$('enc-cell').value);
-  $('enc-dl').href = $('enc-canvas').toDataURL('image/png');
+  prepPng('enc-dl', $('enc-canvas'), 'mondrian-code.png');
   $('enc-info').innerHTML = `${SCRIPT[lang]} · ${DIRS[$('enc-dir').value].toLowerCase()} · ${cells.length} text cells + 8 key cells (at cell ${keyAt}) + ${pad} empty = ${side} × ${side}` +
     (skipped.length ? ` · <span class="warn">skipped: ${skipped.join(' ')}</span>` : '');
   $('enc-str').textContent = grid.map(c => NAME[c]).join('');
   paintLine($('enc-line'), cells, 24);
-  $('enc-line-dl').href = $('enc-line').toDataURL('image/png');
+  prepPng('enc-line-dl', $('enc-line'), 'mondrian-code-line.png');
   $('enc-line-str').textContent = cells.map(c => NAME[c]).join('');
 }
 function runDecode() {
@@ -525,6 +542,7 @@ function runDecode() {
 }
 $('enc-go').onclick = runEncode;
 $('dec-go').onclick = runDecode;
+$('enc-dl').onclick = savePng; $('enc-line-dl').onclick = savePng;
 $('dec-file').onchange = e => {
   const f = e.target.files[0]; if (!f) return;
   const img = new Image(); img.onload = () => {
