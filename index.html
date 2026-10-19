@@ -114,6 +114,20 @@
 </table>
 <p><b>How close to Huffman is it?</b> Weighted by how often each letter appears in English, a letter takes <b>1.89 colour cells</b> on average, instead of 3 in a fixed-length ternary code. Shannon's limit for a ternary code with no separators is about <b>2.63 cells</b> per English letter. Mondrian Code goes below that on colour cells only because it adds a white or black marker to every character (2.89 cells in total). That is the deliberate trade-off: a true Huffman code is <i>prefix-free</i>, so it needs no separators, but it is hard to read by eye and one misread cell can scramble everything after it. Mondrian Code pays one marker per character for readability and recovery. Against a fixed 3-cell code plus marker (4 cells), text is about 28% shorter.</p>
 
+<h2 class="b">Compared with the bit system</h2>
+<p>Average cost of one English letter, weighted by letter frequency. A <b>cell</b> is one square, or one bit in a binary code. <b>Efficiency</b> = the information a letter really carries (Shannon: 4.17 bits) divided by what the code can hold in those cells.</p>
+<table>
+  <tr><th>Code</th><th>States per cell</th><th>Cells per letter</th><th>Capacity used</th><th>Efficiency</th></tr>
+  <tr><td>ASCII / UTF-8 (computers)</td><td>2</td><td>8</td><td>8 bits</td><td>52%</td></tr>
+  <tr><td>Fixed 5-bit (teleprinter)</td><td>2</td><td>5</td><td>5 bits</td><td>83%</td></tr>
+  <tr><td>Binary Huffman (ZIP-style)</td><td>2</td><td>4.20</td><td>4.20 bits</td><td>99%</td></tr>
+  <tr><td>Fixed ternary, 3 trits</td><td>3</td><td>3</td><td>4.75 bits</td><td>88%</td></tr>
+  <tr><td>Ternary Huffman, no separators</td><td>3</td><td>2.70</td><td>4.28 bits</td><td>97%</td></tr>
+  <tr><td>Mondrian Code v1 (3 cells + marker)</td><td>5</td><td>4</td><td>9.29 bits</td><td>45%</td></tr>
+  <tr><td><b>Mondrian Code v2</b> (1.89 colour cells + marker)</td><td>5</td><td><b>2.89</b></td><td>6.71 bits</td><td>62%</td></tr>
+</table>
+<p><b>What the numbers say.</b> Mondrian Code needs the <b>fewest squares</b> of any code here that a person can read by eye: 2.89 per letter, against 4.20 bits for the best binary Huffman code (31% fewer) and 8 for ASCII (64% fewer). That is the advantage of three colours over two. But each square can show 5 states, and the white and black markers use part of that capacity, so in pure information terms it is about <b>62% efficient</b>, where Huffman codes reach 97–99%. The markers are what you pay for being able to see where every letter ends and to recover after a misread cell. In real text the gap narrows: about one character in six is a space, which binary codes must store and Mondrian Code gets free inside the black marker.</p>
+
 <h2 class="k">The alphabet</h2>
 <p class="muted">The same colours mean different letters in English and Russian, so the reader needs to know the language. Digits and punctuation are shared.</p>
 <table>

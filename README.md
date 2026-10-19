@@ -26,6 +26,19 @@ A writing system in Piet Mondrian's five colours. Write any English or Russian t
 
 English letters average 1.89 colour cells (vs 3 fixed-length); with the marker 2.89 cells. Shannon's limit for a separator-free ternary code is about 2.63. The marker is the deliberate trade-off against a true prefix-free Huffman code: readability and recovery after a misread cell.
 
+## Compared with the bit system (per English letter)
+
+| Code | States/cell | Cells/letter | Efficiency |
+|---|---|---|---|
+| ASCII / UTF-8 | 2 | 8 | 52% |
+| Fixed 5-bit | 2 | 5 | 83% |
+| Binary Huffman (ZIP-style) | 2 | 4.20 | 99% |
+| Fixed ternary (3 trits) | 3 | 3 | 88% |
+| Ternary Huffman, no separators | 3 | 2.70 | 97% |
+| **Mondrian Code v2** | 5 | **2.89** | 62% |
+
+Fewest squares of any eye-readable code (31% fewer than binary Huffman); the white/black markers cost information efficiency but make letters visible and recoverable. Spaces are free (inside the black marker).
+
 The same colours mean different letters in English and Russian, so the reader needs to know the language.
 
 ## Files
