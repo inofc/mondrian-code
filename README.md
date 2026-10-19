@@ -10,7 +10,11 @@ A writing system in Piet Mondrian's five colours. Write any Latin-script (Englis
 2. **Short codes for frequent letters.** A character is 1 to 4 colour cells. Latin is ordered by English letter frequency, Cyrillic by Russian: E, T, A (О, Е, А) take one cell, the next nine take two, the rest take three. Digits take three; punctuation and accented or national letters (Ä Ö Ü ß É Ç Ñ Å Ø …, Є І Ї Ґ Ў Ђ Ј Љ Њ Ћ Џ …) take four.
 3. **White and black close every character.** White = end of a letter, black = end of a word (no space cell needed).
 4. **Empty cells carry no meaning.** A marker that follows another marker is a filler and is skipped, so any text fills a perfect square (side = √cells, rounded up) with the spare white cells spread evenly between characters.
-5. **Read like a book:** row by row from the top-left corner.
+5. **Four reading directions:** left to right, right to left, top to bottom, bottom to top.
+6. **Direction key:** 8 colour cells in a row (R Y B R Y B R + one script cell: R Latin, Y Cyrillic, B Chinese). No character is longer than 7 cells, so the run never occurs in text. It starts at cell F(n) mod n² (Fibonacci, n = grid side) in reading order; the reader tries all four directions and keeps the one with the key in place, which also gives the script.
+7. **Escape:** any other Unicode character is written as an escape code plus its code point in two 6-cell parts.
+
+**Chinese:** the 3,249 most frequent characters (Jun Da, Modern Chinese corpus; 99.4% of text) in 1 to 7 cells.
 
 ## Where the ideas come from
 
@@ -39,7 +43,7 @@ English letters average 1.89 colour cells (vs 3 fixed-length); with the marker 2
 
 Fewest squares of any eye-readable code (31% fewer than binary Huffman); the white/black markers cost information efficiency but make letters visible and recoverable. Spaces are free (inside the black marker).
 
-The same colours mean different letters in the Latin and Cyrillic tables, so the reader needs to know the language.
+The same colours mean different letters in each script; the direction key names the script.
 
 ## Files
 
