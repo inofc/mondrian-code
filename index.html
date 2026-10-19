@@ -44,6 +44,7 @@
   nav.back a { display:inline-block; border: 2px solid #c8c8c8; padding: 6px 12px; color:#333; text-decoration:none; font-size:15px; }
   nav.back a:hover { border-color: var(--k); }
   details.fold { margin-top: 18px; }
+  .linewrap { overflow-x: auto; max-width: 100%; border: 2px dashed #ddd; padding: 6px; } .linewrap canvas { max-width: none; margin: 0; }
   .ghbtn { display:inline-flex; align-items:center; gap:10px; margin-top:16px; background: var(--k); color:#fff; text-decoration:none; padding:10px 16px; font-weight:700; font-size:16px; }
   .ghbtn:hover { background:#262626; } .ghbtn .gh { width:22px; height:22px; }
   .ghbtn .ghsub { font-weight:400; font-size:13px; color:#bbb; border-left:1px solid #555; padding-left:10px; }
@@ -151,6 +152,10 @@
   <canvas id="enc-canvas" width="10" height="10"></canvas>
   <p class="muted" id="enc-info"></p>
   <p class="muted">Code string (paste it into the reader below): <span class="mono" id="enc-str"></span></p>
+  <h3 style="margin-top:22px">The same text as one line <span class="muted" style="font-weight:400">(read left to right, no direction key)</span></h3>
+  <div class="linewrap"><canvas id="enc-line" width="10" height="10"></canvas></div>
+  <a class="btn ghost" id="enc-line-dl" download="mondrian-code-line.png">Download line PNG</a>
+  <p class="muted">Line code string: <span class="mono" id="enc-line-str"></span></p>
 </div>
 
 <h3>Read: painting → text</h3>
@@ -158,7 +163,7 @@
   <div class="row">
     <div><label for="dec-lang"><b>Script</b> <span class="muted">(found automatically from the key)</span></label>
       <select id="dec-lang"><option value="">Automatic</option><option value="EN">Latin</option><option value="RU">Cyrillic</option><option value="ZH">Chinese</option></select></div>
-    <div><label for="dec-file"><b>Upload a painting</b> <span class="muted">(PNG made on this page)</span></label>
+    <div><label for="dec-file"><b>Upload a painting or a line</b> <span class="muted">(PNG made on this page)</span></label>
       <input type="file" id="dec-file" accept="image/*"></div>
   </div>
   <label for="dec-in"><b>…or paste a code string</b> <span class="muted">(R Y B for colours, W white, K black)</span></label>
@@ -178,7 +183,7 @@
 <p><b>2. Short codes for frequent letters.</b> A character is 1 to 4 colour cells long (up to 7 for Chinese). The most common letters get the shortest codes, as in Morse code and Huffman coding (the idea behind ZIP files and LLM tokenizers). E, T and A in English (О, Е, А in Russian) need a single cell.</p>
 <p><b>3. White and black close every character.</b> After its colour cells, each character ends with a marker: <span class="sw W"></span> white = end of a letter, <span class="sw K"></span> black = end of a word, so no space is needed. Because characters vary in length, this end signal is what keeps the reader in sync, just like the start and stop bits on a serial cable or the prefixes in UTF-8.</p>
 <p><b>4. Empty cells carry no meaning.</b> A marker that follows another marker (or opens the grid) is a filler and is skipped. That lets any text fill a perfect square: side = √(cells), rounded up, with the spare white cells spread evenly between characters.</p>
-<p><b>5. Four reading directions.</b> A painting can be written left to right, right to left, top to bottom or bottom to top: row by row, or column by column.</p>
+<p><b>5. Four reading directions.</b> A painting can be written left to right, right to left, top to bottom or bottom to top: row by row, or column by column. A text can also be written as a single <b>line</b>, read left to right: the same cells without the square and without the key, handy for signatures, borders and banners.</p>
 <p><b>6. A direction key tells the reader which way, and which script.</b> Every painting carries one key: <b>8 colour cells in a row</b>, <span class="sw R"></span><span class="sw Y"></span><span class="sw B"></span><span class="sw R"></span><span class="sw Y"></span><span class="sw B"></span><span class="sw R"></span> followed by one cell for the script (<span class="sw R"></span> Latin, <span class="sw Y"></span> Cyrillic, <span class="sw B"></span> Chinese). No character is longer than 7 cells, so this run can never appear inside text, and the key is always unique. Its place is fixed by the <b>Fibonacci sequence</b>: in a grid of side <i>n</i>, the key starts at cell F(<i>n</i>) mod <i>n</i>², counted in reading order (6 × 6 → cell 8, 8 × 8 → cell 21, 9 × 9 → cell 34). The reader tries all four directions and keeps the one where the key sits exactly at its Fibonacci cell. That also tells it the script, so nobody has to say which language a painting is in.</p>
 <p><b>7. Any other character still fits.</b> A special escape code is followed by the character's Unicode number in two 6-cell parts, so emoji and rare characters survive too.</p>
 
@@ -384,11 +389,31 @@ function gridFromPixels(W, px) {
   }
   return null;
 }
+function paintLine(canvas, cells, S) {
+  const L = Math.max(3, Math.round(S/13));
+  canvas.width = cells.length*S + L; canvas.height = S + L;
+  const g = canvas.getContext('2d');
+  g.fillStyle = COL.K; g.fillRect(0,0,canvas.width,canvas.height);
+  cells.forEach((c,i) => { g.fillStyle = COL[c]; g.fillRect(i*S+L, L, S-L, S-L); });
+}
+function lineFromPixels(W, H, px) {      // a single row of cells: try cell counts near W/H, largest first
+  const pal = Object.entries(COL).map(([k,h]) => [k,[1,3,5].map(i=>parseInt(h.slice(i,i+2),16))]);
+  const nearest = p => pal.reduce((best,[k,c]) => { const d=(p[0]-c[0])**2+(p[1]-c[1])**2+(p[2]-c[2])**2; return d<best[1]?[k,d]:best; }, ['',1e9]);
+  const lo = Math.max(1, Math.floor(W / H) - 2), hi = Math.ceil(W / H * 1.3) + 3;   // cells are a bit narrower than the line height (grid lines)
+  for (let n = hi; n >= lo; n--) {
+    const step = W / n; let ok = true; const cells = [];
+    for (let i = 1; i < n && ok; i++) { const p = px(i*step, H/2); if (p[0]+p[1]+p[2] > 200) ok = false; }
+    for (let i = 0; i < n && ok; i++) { const [k,d] = nearest(px(i*step + step/2, H/2)); if (d > 9000) ok = false; else cells.push(k); }
+    if (ok) return cells;
+  }
+  return null;
+}
 function readImage(img) {
   const cv = document.createElement('canvas'); cv.width = img.naturalWidth; cv.height = img.naturalHeight;
   const g = cv.getContext('2d'); g.drawImage(img,0,0);
   const data = g.getImageData(0,0,cv.width,cv.height).data;
-  return gridFromPixels(cv.width, (x,y) => { const i = (Math.floor(y)*cv.width + Math.floor(x))*4; return [data[i],data[i+1],data[i+2]]; });
+  const px = (x,y) => { const i = (Math.floor(y)*cv.width + Math.floor(x))*4; return [data[i],data[i+1],data[i+2]]; };
+  return cv.width > 1.5 * cv.height ? lineFromPixels(cv.width, cv.height, px) : gridFromPixels(cv.width, px);
 }
 
 // ---- UI --------------------------------------------------------------------
@@ -411,13 +436,16 @@ function runEncode() {
   $('enc-info').innerHTML = `${SCRIPT[lang]} · ${DIRS[$('enc-dir').value].toLowerCase()} · ${cells.length} text cells + 8 key cells (at cell ${keyAt}) + ${pad} empty = ${side} × ${side}` +
     (skipped.length ? ` · <span class="warn">skipped: ${skipped.join(' ')}</span>` : '');
   $('enc-str').textContent = grid.map(c => NAME[c]).join('');
+  paintLine($('enc-line'), cells, 24);
+  $('enc-line-dl').href = $('enc-line').toDataURL('image/png');
+  $('enc-line-str').textContent = cells.map(c => NAME[c]).join('');
 }
 function runDecode() {
   const s = $('dec-in').value.toUpperCase().replace(/[^RYBWK]/g,'');
   if (!s) { $('dec-out').textContent = 'Paste a code string or upload a painting.'; return; }
   const r = readGrid([...s].map(c => FROM[c]), $('dec-lang').value);
   $('dec-out').innerHTML = (r.text ? r.text.replace(/</g,'&lt;') : '(nothing to read)') +
-    `<div class="muted" style="font-weight:400">${r.dir ? `Key found: ${SCRIPT[r.lang]}, read ${DIRS[r.dir].toLowerCase()}` : 'No direction key found: read left to right'}</div>`;
+    `<div class="muted" style="font-weight:400">${r.dir ? `Key found: ${SCRIPT[r.lang]}, read ${DIRS[r.dir].toLowerCase()}` : 'No direction key (a line or an old painting): read left to right as ' + SCRIPT[r.lang] + '; change the Script menu for another script'}</div>`;
 }
 $('enc-go').onclick = runEncode;
 $('dec-go').onclick = runDecode;
