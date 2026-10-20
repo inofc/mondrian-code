@@ -2,7 +2,7 @@
 
 A writing system in Piet Mondrian's five colours. Write any text in ten scripts (v4): Latin script (English, German, Swiss German, French, Italian, Spanish, Portuguese, Dutch, Danish, Norwegian, Swedish, Finnish…), Cyrillic (Russian, Ukrainian, Belarusian, Bulgarian, Serbian, Macedonian), Chinese, Korean, Japanese kana, Arabic, Hebrew, Greek, Hindi (Devanagari) or Ge'ez (Amharic). African Latin-script languages (Swahili, Yoruba, Hausa, Igbo, Wolof, Lingala…) are covered too as a square colour grid, and read it back.
 
-**Try it:** https://inofc.github.io/mondrian-code/
+**Try it:** https://nickgushchin.github.io/mondrian-code/
 
 ## Rules
 
@@ -51,4 +51,4 @@ The same colours mean different letters in each script; the direction key names 
 
 Not encryption: anyone can break it by counting colours.
 
-Designed by [Nick Gushchin](https://inofc.github.io), October 2026. MIT licence.
+Designed by [Nick Gushchin](https://nickgushchin.github.io), October 2026. MIT licence.
