@@ -4,6 +4,8 @@ A writing system in Piet Mondrian's five colours. Write any text in ten scripts 
 
 **Try it:** https://nickgushchin.github.io/mondrian-code/
 
+**Watch it:** a 2-minute explainer video plays at the top of the page.
+
 ## Rules
 
 1. **Three colours are the digits.** Red = 0, yellow = 1, blue = 2. One cell holds one trit (a ternary digit, about 1.58 bits).
@@ -48,6 +50,7 @@ The same colours mean different letters in each script; the direction key names 
 ## Files
 
 - `index.html`: the whole thing (description, encoder, decoder and image reader) in one static page, no dependencies.
+- `video/`: the 2-minute explainer (MP4) and its poster. AI voice narration. Music: "Heroic Age" by Kevin MacLeod (incompetech.com), licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The MIT licence covers the code, not the music.
 
 Not encryption: anyone can break it by counting colours.
 

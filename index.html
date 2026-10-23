@@ -72,6 +72,8 @@
   details.try summary:hover { background: #262626; }
   details.try summary.c-r { color: #F04A4A; } details.try summary.c-y { color: var(--y); } details.try summary.c-b { color: #6E9BE6; }
   .try-body { border: var(--line) solid var(--k); border-top: 0; padding: 4px 18px 8px; }
+  video.film { display:block; width:100%; max-width:600px; height:auto; aspect-ratio:1 / 1; margin:14px auto 10px; border:2px solid var(--k); background:#e6e1d3; }
+  .film-credit { max-width:600px; margin:0 auto 8px; }
   header .title { min-width: 0; }
   @media (max-width: 640px) {
     header { grid-template-columns: 1fr 44px 26px; }
@@ -95,6 +97,17 @@
 </header>
 
 <main>
+
+<details class="try fold" id="watch" open>
+  <summary>Watch it: 2-minute explainer</summary>
+  <div class="try-body">
+    <video class="film" controls playsinline preload="none" poster="video/mondrian-code-explainer-poster.jpg" width="1080" height="1080">
+      <source src="video/mondrian-code-explainer.mp4" type="video/mp4">
+      <a href="video/mondrian-code-explainer.mp4">Download the video (MP4, 18 MB)</a>
+    </video>
+    <p class="muted film-credit">AI voice narration. Music: “Heroic Age” by Kevin MacLeod (incompetech.com), licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p>
+  </div>
+</details>
 
 <details class="try fold">
   <summary class="c-r">See it: examples</summary>
