@@ -65,15 +65,24 @@
   .ex-arrow { font-size: 14px; color:#555; margin: 10px 0; }
   .ex-text { font-size: 20px; font-weight: 800; letter-spacing: .5px; }
   details.try { margin: 8px 0 12px; }
-  details.try summary { list-style:none; cursor:pointer; background: var(--k); color:#fff; font-weight:700; font-size: 19px; padding: 16px 20px; display:flex; justify-content:space-between; align-items:center; }
-  details.try summary::-webkit-details-marker { display:none; }
-  details.try summary::after { content: "+"; font-size: 26px; line-height: 1; }
-  details.try[open] summary::after { content: "–"; }
-  details.try summary:hover { background: #262626; }
-  details.try summary.c-r { color: #F04A4A; } details.try summary.c-y { color: var(--y); } details.try summary.c-b { color: #6E9BE6; }
+  details.try > summary { list-style:none; cursor:pointer; background: var(--k); color:#fff; font-weight:700; font-size: 19px; padding: 16px 20px; display:flex; justify-content:space-between; align-items:center; }
+  details.try > summary::-webkit-details-marker { display:none; }
+  details.try > summary::after { content: "+"; font-size: 26px; line-height: 1; }
+  details.try[open] > summary::after { content: "–"; }
+  details.try > summary:hover { background: #262626; }
+  details.try > summary.c-r { color: #F04A4A; } details.try > summary.c-y { color: var(--y); } details.try > summary.c-b { color: #6E9BE6; }
   .try-body { border: var(--line) solid var(--k); border-top: 0; padding: 4px 18px 8px; }
   video.film { display:block; width:100%; max-width:600px; height:auto; aspect-ratio:1 / 1; margin:14px auto 10px; border:2px solid var(--k); background:#e6e1d3; }
   .film-credit { max-width:600px; margin:0 auto 8px; }
+  details.script { border: 2px solid var(--k); margin: 8px 0; }
+  details.script summary { list-style:none; cursor:pointer; padding: 10px 12px; display:flex; align-items:center; flex-wrap:wrap; gap: 6px 12px; font-weight:700; }
+  details.script summary::-webkit-details-marker { display:none; }
+  details.script summary::after { content: "+"; margin-left:auto; font-size:22px; line-height:1; }
+  details.script[open] summary::after { content: "–"; }
+  details.script summary:hover { background:#f3f3f3; }
+  details.script summary .n { font-weight:400; color:#555; font-size:14px; }
+  details.script .tablewrap { padding: 0 10px 4px; }
+  details.script table { margin-top: 0; }
   header .title { min-width: 0; }
   @media (max-width: 640px) {
     header { grid-template-columns: 1fr 44px 26px; }
@@ -269,15 +278,14 @@
   <tr><td><b>2</b><br><span class="muted">regular</span></td><td class="codes" id="t-en-2"></td><td class="codes" id="t-ru-2"></td></tr>
   <tr><td><b>3</b><br><span class="muted">least frequent</span></td><td class="codes" id="t-en-3"></td><td class="codes" id="t-ru-3"></td></tr>
   <tr><td><b>4</b><br><span class="muted">special symbols</span></td><td class="codes" id="t-en-4"></td><td class="codes" id="t-ru-4"></td></tr>
-  <tr><td>Chinese</td><td class="codes" colspan="2"><span id="t-zh"></span><p class="muted">The 3,249 most frequent characters (Jun Da's Modern Chinese corpus), which cover 99.4% of everyday text: 3 characters take 1 cell, 9 take 2, 17 take 3, 71 take 4, 243 take 5, 729 take 6 and the rest 7. Shown: the 29 shortest codes. Chinese punctuation ，。？！ uses the shared codes below.</p></td></tr>
+  <tr><td>Chinese</td><td class="codes" colspan="2"><span id="t-zh"></span><p class="muted">The 3,249 most frequent characters (Jun Da's Modern Chinese corpus), which cover 99.4% of everyday text: 3 characters take 1 cell, 9 take 2, 17 take 3, 71 take 4, 243 take 5, 729 take 6 and the rest 7. Shown: the 29 shortest codes. Chinese punctuation ，。？！ uses the shared codes below.</p>
+    <details class="script" id="zh-all"><summary>All 3,249 Chinese characters</summary><div id="t-zh-all"></div></details></td></tr>
   <tr><td>Digits (3)</td><td class="codes" colspan="2" id="t-dig"></td></tr>
   <tr><td>Punctuation (4)</td><td class="codes" colspan="2" id="t-pun"></td></tr>
 </table></div>
 <h3>The other scripts</h3>
-<div class="tablewrap"><table>
-  <tr><th style="width:150px">Script (key cells)</th><th>Shortest codes</th><th style="width:90px">Symbols</th></tr>
-  <tbody id="t-other"></tbody>
-</table></div>
+<p class="muted">Open a script to see every character with its colours, and the three script cells it puts in the key. ◌ stands for the letter that a mark goes with (vowel signs, voicing marks). In Korean, ‑ㄱ is a final consonant.</p>
+<div id="t-other"></div>
 
 <h2>What it is good for</h2>
 <p><b>Signature and art:</b> a name, a date or a motto hidden in a logo, a poster or a print. <b>Teaching:</b> encode your own name and you have learned bits, bytes, variable-length codes, error checking and why an LLM turns words into tokens, in ten minutes. <b>Puzzles:</b> decode-the-poster challenges.</p>
@@ -509,11 +517,17 @@ function fillTables() {
   for (const [lang, freq] of [['EN',EN_FREQ+EN_EXTRA],['RU',RU_FREQ+RU_EXTRA]]) for (const n of [1,2,3,4])
     $(`t-${lang.toLowerCase()}-${n}`).innerHTML = row(lang, byLen(lang,n,freq)) || '<span class="muted">none</span>';
   $('t-zh').innerHTML = row('ZH', ZH_FREQ.slice(0,29));
-  $('t-other').innerHTML = ['KO','JA','AR','HE','EL','HI','GZ'].map(L => {
-    const chars = Object.keys(T[L]).filter(c => !DIG.includes(c) && !PUN.includes(c)).sort((a,b) => T[L][a].length - T[L][b].length || (T[L][a] < T[L][b] ? -1 : 1)).slice(0,12);
-    const show = c => /[\u0300-\u036F\u3099\u309A\u064B-\u0652\u0900-\u0903\u093A-\u094F]/.test(c) ? '\u25CC' + c : c;
-    return `<tr><td><b>${SCRIPT[L]}</b><br>${swatches(KEY_SCRIPT[L])}</td><td class="codes">${chars.map(c => `<span class="item"><b>${L === 'KO' ? ((c >= '\u11A8' && c <= '\u11C2') ? '\u2011' : '') + c.normalize('NFKC') : show(c)}</b> ${swatches(T[L][c])}</span>`).join('')}</td><td>${Object.keys(T[L]).length - 20} + digits, punctuation</td></tr>`;
-  }).join('');
+  // Full tables come straight from T, so they always match the encoder.
+  const KO_LEAD = '\u3131\u3132\u3134\u3137\u3138\u3139\u3141\u3142\u3143\u3145\u3146\u3147\u3148\u3149\u314A\u314B\u314C\u314D\u314E', KO_TAIL = '\u3131\u3132\u3133\u3134\u3135\u3136\u3137\u3139\u313A\u313B\u313C\u313D\u313E\u313F\u3140\u3141\u3142\u3144\u3145\u3146\u3147\u3148\u314A\u314B\u314C\u314D\u314E';   // conjoining jamo shown as standalone letters
+  const jamo = c => { const p = c.codePointAt(0); return p <= 0x1112 ? KO_LEAD[p - 0x1100] : p <= 0x1175 ? String.fromCodePoint(p + 0x1FEE) : '\u2011' + KO_TAIL[p - 0x11A8]; };
+  const show = (L, c) => L === 'KO' ? jamo(c) : (/\p{M}/u.test(c) ? '\u25CC' + c : c);
+  const letters = L => Object.keys(T[L]).filter(c => !DIG.includes(c) && !PUN.includes(c)).sort((a,b) => T[L][a].length - T[L][b].length || (T[L][a] < T[L][b] ? -1 : 1));
+  const full = L => { const g = {}; letters(L).forEach(c => (g[T[L][c].length] ||= []).push(c));
+    return '<div class="tablewrap"><table><tr><th style="width:90px">Cells</th><th>Characters</th></tr>' + Object.keys(g).map(n =>
+      `<tr><td><b>${n}</b><br><span class="muted">${g[n].length.toLocaleString('en-US')}</span></td><td class="codes">${g[n].map(c => `<span class="item"><b>${show(L, c)}</b> ${swatches(T[L][c])}</span>`).join('')}</td></tr>`).join('') + '</table></div>'; };
+  $('t-other').innerHTML = ['KO','JA','AR','HE','EL','HI','GZ'].map(L =>
+    `<details class="script"><summary>${SCRIPT[L]} <span>${swatches(KEY_SCRIPT[L])}</span><span class="n">${letters(L).length} characters</span></summary>${full(L)}</details>`).join('');
+  $('zh-all').addEventListener('toggle', () => { if ($('zh-all').open && !$('t-zh-all').firstChild) $('t-zh-all').innerHTML = full('ZH'); });   // 3,249 entries: built on first open
   $('t-dig').innerHTML = row('EN', DIG); $('t-pun').innerHTML = row('EN', PUN);
 }
 const PNG = {};   // ready-made files, so the phone share sheet opens straight from the tap

@@ -47,6 +47,8 @@ Fewest squares of any eye-readable code (31% fewer than binary Huffman); the whi
 
 The same colours mean different letters in each script; the direction key names the script.
 
+**Every character's colours, script by script** (all ten scripts, including the 3,249 Chinese characters): on the page under *How it works → The alphabet*. The tables are generated from the encoder itself, so they always match it.
+
 ## Files
 
 - `index.html`: the whole thing (description, encoder, decoder and image reader) in one static page, no dependencies.
